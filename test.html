@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Redaction App</title>
+</head>
+<body>
+  <h1>Text Redaction App</h1>
+
+  <label for="originalText">Original Text:</label>
+  <textarea id="originalText" rows="4" cols="50"></textarea>
+
+  <label for="wordsToRedact">Words to Redact (space-separated):</label>
+  <input type="text" id="wordsToRedact" />
+
+  <label for="replacementText">Replacement Text:</label>
+  <input type="text" id="replacementText" />
+
+  <button onclick="redactText()">Redact Now</button>
+
+  <p><strong>Redacted Text:</strong></p>
+  <p id="redactedResult"></p>
+
+  <script>
+    function redactTextContent(originalText, wordsToRedact, replacementText) {
+      const words = originalText.split(/\s+/);
+      const redactedWords = words.map(word => {
+        // Remove punctuation marks
+        const cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
+
+        if (wordsToRedact.includes(cleanWord)) {
+          // Add back the original punctuation marks
+          const originalPunctuation = word.replace(/[\w\s]/g, '');
+          return replacementText + originalPunctuation;
+        }
+        return word;
+      });
+      return redactedWords.join(' ');
+    }
+
+    function redactText() {
+      const originalText = document.getElementById('originalText').value;
+      const wordsToRedactInput = document.getElementById('wordsToRedact').value;
+      const wordsToRedact = wordsToRedactInput.split(' ');
+      const replacementText = document.getElementById('replacementText').value;
+
+      const redactedText = redactTextContent(originalText, wordsToRedact, replacementText);
+
+      document.getElementById('redactedResult').textContent = redactedText;
+    }
+  </script>
+</body>
+</html>
